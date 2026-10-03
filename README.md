@@ -1,52 +1,178 @@
-[![Build Status](https://dev.azure.com/ms/banner-settings-ado-extension/_apis/build/status/microsoft.banner-settings-ado-extension?branchName=master)](https://dev.azure.com/ms/banner-settings-ado-extension/_build/latest?definitionId=259&branchName=master)
+# 📢 Banner Settings for Azure DevOps
 
-Banner Settings provides a settings pane under Organization Settings to allow Project Collection Administrators to show sitewide banners. Alert your Azure DevOps users to upcoming changes or events without sending out mass emails. Compatible with Azure DevOps Services and Server.
+<p align="center">
+  <img src="static/screenshot.png" alt="Banner Settings Screenshot" width="850">
+</p>
 
-![](static/screenshot.png)
+<p align="center">
+  <strong>Site-wide banner management for Azure DevOps</strong>
+</p>
 
-### Features
+<p align="center">
+  <a href="#-features">Features</a> •
+  <a href="#-how-it-works">How It Works</a> •
+  <a href="#-banner-types">Banner Types</a> •
+  <a href="#-installation">Installation</a> •
+  <a href="#-development">Development</a>
+</p>
 
-- Show banners on any page in Azure DevOps.
-- Choose between three types (levels) of messages: Info, Warning, and Error.
-- Choose an expiration date for a message.
-- Include hyperlinks in your banners using markdown syntax like the banner message below.
+---
 
-```markdown
-Windows October Update released! Please visit the [Windows Insider Blog](https://blogs.windows.com/windowsexperience/tag/windows-insider-program/) for more info.
+## 📌 Overview
+
+**Banner Settings** is an Azure DevOps extension that provides a settings pane under **Organization Settings**.
+
+It allows **Project Collection Administrators** to create and display site-wide banners across Azure DevOps.
+
+Instead of sending mass emails, administrators can use banners to communicate:
+
+* 📢 Important announcements
+* ⚠️ Upcoming changes
+* 🔧 Maintenance notifications
+* 📅 Upcoming events
+* ℹ️ General information
+
+The extension is compatible with **Azure DevOps Services and Azure DevOps Server**.
+
+---
+
+## 📸 Preview
+
+<p align="center">
+  <img src="static/screenshot.png" alt="Banner Settings" width="850">
+</p>
+
+### Example Banner
+
+> ⚠️ **Windows October Update released!**
+> Please visit the [Windows Insider Blog](https://blogs.windows.com/windowsexperience/tag/windows-insider-program/) for more information.
+
+---
+
+# ✨ Features
+
+<table>
+<tr>
+<td width="50%">
+
+### 📢 Site-wide Banners
+
+Display important messages across Azure DevOps pages.
+
+</td>
+<td width="50%">
+
+### 🎨 Multiple Message Levels
+
+Choose between Info, Warning, and Error banners.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+### 📅 Expiration Dates
+
+Set an expiration date for each banner.
+
+</td>
+<td>
+
+### 🔗 Markdown Links
+
+Include hyperlinks in banner messages using Markdown.
+
+</td>
+</tr>
+</table>
+
+---
+
+# 🚦 Banner Types
+
+The extension supports three levels of banner messages:
+
+| Level          | Purpose               | Example                  |
+| -------------- | --------------------- | ------------------------ |
+| 🟦 **Info**    | General information   | New feature announcement |
+| 🟨 **Warning** | Important notice      | Scheduled maintenance    |
+| 🟥 **Error**   | Critical notification | Service disruption       |
+
+---
+
+# 🔄 How It Works
+
+The basic workflow of the extension can be represented as:
+
+```mermaid
+flowchart TD
+    A[Project Collection Administrator] --> B[Organization Settings]
+    B --> C[Banner Settings]
+    C --> D[Create / Configure Banner]
+    D --> E{Select Banner Level}
+    E -->|Info| F[Publish Banner]
+    E -->|Warning| F
+    E -->|Error| F
+    F --> G[Azure DevOps Users]
+    G --> H[View Banner]
+    H --> I{Banner Closed?}
+    I -->|Yes| J[Next Available Banner]
+    I -->|No| K[Banner Remains Visible]
 ```
 
-### Restrictions
+---
 
-- Only one banner can be shown at a time to keep the interface clean. Banners are prioritized by level. For example, if you have posted a warning message and an info message, the info message will only be shown after a user closes the warning message, or you delete the warning message.
-- Banners are restricted to a length of thirty words.
+# 🏗️ Extension Workflow
 
-### Building the project
+```mermaid
+flowchart LR
+    A[Administrator] --> B[Banner Configuration]
+    B --> C[Validation]
+    C --> D[Banner Storage]
+    D --> E[Azure DevOps Pages]
+    E --> F[Users]
 
-Just run:
+    B --> G[Expiration Date]
+    G --> D
 
-    npm run build:dev
-    npm run package:dev
+    B --> H[Message Level]
+    H --> D
+```
 
-This produces a .vsix file which can be uploaded to the [Visual Studio Marketplace](https://marketplace.visualstudio.com/azuredevops)
+---
 
-Publish it to your own publisher by running:
+# 🧩 Core Components
 
-    npm run publish:dev
+| Component                    | Description                                         |
+| ---------------------------- | --------------------------------------------------- |
+| ⚙️ **Organization Settings** | Provides access to banner configuration             |
+| 📝 **Banner Configuration**  | Allows administrators to create and modify messages |
+| 🚦 **Message Level**         | Determines banner priority                          |
+| 📅 **Expiration Date**       | Controls banner availability                        |
+| 🔗 **Markdown Support**      | Allows hyperlinks inside messages                   |
+| 🖥️ **Azure DevOps UI**      | Displays active banners to users                    |
 
-You can then serve the extension locally and visit your newly published dev environment extension using
+---
 
-    npm run dev
+# 🥇 Banner Priority
 
-### Contributing
+Only **one banner can be displayed at a time** to keep the interface clean.
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
+When multiple banners exist, they are prioritized by their level.
 
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
+```mermaid
+flowchart TD
+    A[Multiple Active Banners] --> B{Highest Priority}
+    B --> C[Error]
+    B --> D[Warning]
+    B --> E[Info]
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+    C --> F[Display Error Banner]
+    F --> G{Closed or Deleted?}
+
+    G -->|Yes| H[Display Next Available Banner]
+    G -->|No| I[Keep Error Banner Visible]
+
+    H --> D
+```
